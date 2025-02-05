@@ -35,7 +35,7 @@ const userSchema = new Schema({
 
 // methons 
 userSchema.methods.generateAuthToken = function() {
-    const token = jwt.sign({_id : this._id} , process.env.JWT_tOKEN_SECRET,{expiresIn:'24h'})
+    const token = jwt.sign({_id : this._id}, process.env.JWT_TOKEN_SECRET, { expiresIn: '24h' });
     return token
 }
 

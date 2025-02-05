@@ -271,3 +271,86 @@ The endpoint responds with appropriate HTTP status codes and messages.
 - Ensure that the `Content-Type` header is set to `application/json`.
 - Make sure the password is correct and matches the one stored in the database.
 - Use the token in the `Authorization` header for subsequent authenticated requests.
+
+# `/api/v1/users/logout` Endpoint Documentation
+
+## Endpoint Description
+The `/api/v1/users/logout` endpoint allows authenticated users to log out from their account. It clears the authentication token from cookies and blacklists the token to prevent further use.
+
+## Request Type
+`GET`
+
+## Request URL
+```
+/api/v1/users/logout
+```
+
+## Request Headers
+- `Authorization: Bearer <token>` (required if the token is not stored in cookies)
+
+## Request
+This endpoint does not require a request body.
+
+## MongoDB Collection Field Requirements
+The blacklisted token is stored in a MongoDB collection with the following structure:
+
+| Field       | Type     | Required | Description                                |
+|-------------|----------|----------|--------------------------------------------|
+| `_id`       | ObjectId | Yes      | Unique identifier for the blacklist entry. |
+| `token`     | String   | Yes      | The token that has been blacklisted.       |
+| `createdAt` | Date     | Yes      | The date and time when the token was added.|
+
+## Response
+The endpoint responds with appropriate HTTP status codes and messages.
+
+### Success Response
+**Status Code:** `200 OK`
+
+**Body:**
+```json
+{
+  "message": "Logged out"
+}
+```
+
+### Error Responses
+1. **Unauthorized Access:**
+   **Status Code:** `401 Unauthorized`
+
+   **Body:**
+   ```json
+   {
+     "message": "Authentication required"
+   }
+   ```
+
+2. **Internal Server Error:**
+   **Status Code:** `500 Internal Server Error`
+
+   **Body:**
+   ```json
+   {
+     "success": false,
+     "message": "An error occurred. Please try again later."
+   }
+   ```
+
+## Notes
+- Ensure the `Authorization` header or cookie containing the token is provided.
+- The endpoint clears the `token` cookie and blacklists the token in the database.
+- Blacklisted tokens cannot be reused for authentication.
+
+## Example Request
+### Request Headers:
+```json
+{
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjIxYTdiNmMzZDJjMWI0ZTIzNDU2NyIsImlhdCI6MTY4NzA3NzAwMH0.l7HkBnz5WupcYX6aTk0Okp3tNcdJ93Ck0U8URrA9Gzg"
+}
+```
+
+### Example Success Response:
+```json
+{
+  "message": "Logged out"
+}
+```
