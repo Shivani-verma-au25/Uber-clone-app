@@ -40,7 +40,11 @@ userSchema.methods.generateAuthToken = function() {
 }
 
 userSchema.methods.comparePassword = async function(password) {
-    return bcrypt.compare(password , this.password)
+    // console.log("Plain text password:", password);
+    // console.log("Hashed password from DB:", this.password);
+    return await bcrypt.compare(password, this.password);
+    // return bcrypt.compare(password , this.password)
+
 }
 
 userSchema.statics.hashPassword = async function (password) {
