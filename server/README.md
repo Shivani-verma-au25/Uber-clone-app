@@ -354,3 +354,158 @@ The endpoint responds with appropriate HTTP status codes and messages.
   "message": "Logged out"
 }
 ```
+
+# Captain API Documentation
+
+## `/api/v1/captains/register` Endpoint Documentation
+
+### Endpoint Description
+The `/api/v1/captains/register` endpoint is used to register a new captain. It accepts captain and vehicle details as input, validates the data, and creates a new captain account in the database.
+
+### Request Type
+`POST`
+
+### Request URL
+```
+/api/v1/captains/register
+```
+
+### Request Headers
+- `Content-Type: application/json`
+
+### Request Body
+The endpoint expects the following JSON payload:
+
+```json
+{
+  "fullname": {
+    "firstname": "<string>",
+    "lastname": "<string>"
+  },
+  "email": "<string>",
+  "password": "<string>",
+  "vehicle": {
+    "color": "<string>",
+    "plate": "<string>",
+    "capacity": "<number>",
+    "vehicleType": "car" | "motorcycle" | "auto"
+  }
+}
+```
+
+### Field Requirements
+| Field                 | Type   | Required | Description                                    |
+|----------------------|--------|----------|------------------------------------------------|
+| `fullname.firstname` | String | Yes      | Min length: 3 characters                       |
+| `fullname.lastname`  | String | No       | Min length: 3 characters if provided           |
+| `email`             | String | Yes      | Valid email format                             |
+| `password`          | String | Yes      | Min length: 6 characters                       |
+| `vehicle.color`     | String | Yes      | Min length: 3 characters                       |
+| `vehicle.plate`     | String | Yes      | Min length: 3 characters                       |
+| `vehicle.capacity`  | Number | Yes      | Minimum value: 1                               |
+| `vehicle.vehicleType`| String | Yes      | Must be one of: "car", "motorcycle", "auto"    |
+
+### Response
+The endpoint responds with appropriate HTTP status codes and messages.
+
+### Success Response
+**Status Code:** `200 OK`
+
+**Body:**
+```json
+{
+  "token": "<authToken>",
+  "newCaptain": {
+    "_id": "<captainId>",
+    "fullname": {
+      "firstname": "<string>",
+      "lastname": "<string>"
+    },
+    "email": "<string>",
+    "vehicle": {
+      "color": "<string>",
+      "plate": "<string>",
+      "capacity": "<number>",
+      "vehicleType": "<string>"
+    },
+    "status": "inactive",
+    "createdAt": "<timestamp>",
+    "updatedAt": "<timestamp>"
+  }
+}
+```
+
+### Error Responses
+1. **Validation Error:**
+   **Status Code:** `400 Bad Request`
+
+   **Body:**
+   ```json
+   {
+     "errors": [
+       {
+         "msg": "<validationErrorMessage>",
+         "param": "<fieldName>",
+         "location": "body"
+       }
+     ]
+   }
+   ```
+
+2. **Captain Already Exists:**
+   **Status Code:** `400 Bad Request`
+
+   **Body:**
+   ```json
+   {
+     "message": "Captain already exist"
+   }
+   ```
+
+### Example Request
+```json
+{
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Doe"
+  },
+  "email": "john.doe@example.com",
+  "password": "secure123",
+  "vehicle": {
+    "color": "Blue",
+    "plate": "ABC123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+### Example Success Response
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "newCaptain": {
+    "_id": "63f21a7b6c3d2c1b4e234567",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "vehicle": {
+      "color": "Blue",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "status": "inactive",
+    "createdAt": "2023-07-20T10:30:00.000Z",
+    "updatedAt": "2023-07-20T10:30:00.000Z"
+  }
+}
+```
+
+### Notes
+- The password is automatically hashed before storing in the database
+- A JWT token is generated and returned upon successful registration
+- The captain's initial status is set to "inactive"
+- The system prevents duplicate email registrations

@@ -4,8 +4,7 @@ import express from 'express'
 import Cors from 'cors'
 import cookieParser from 'cookie-parser'
 import userRoute from './routes/user.route.js'
-
-
+import captionRouter from './routes/captain.routes.js'
 const app = express()
 
 
@@ -18,12 +17,12 @@ app.use(cookieParser())
 
 
 // routes
-app.get('/', (req,res) => {
-    res.send("hello express")
-})
+// app.get('/', (req,res) => {
+//     res.send("hello express")
+// })
 
 app.use('/api/v1/users',userRoute)
-
+app.use('/api/v1/captains',captionRouter)
 
 
 
