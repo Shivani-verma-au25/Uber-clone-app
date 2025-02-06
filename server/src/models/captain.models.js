@@ -72,16 +72,14 @@ const captainSchema = new Schema({
 // methods 
 
 captainSchema.methods.generateAuthCaptionToken =  function(){
-    const token =  jwt.sign({_id : this._id},process.env.JWT_TOKEN_SECRET_CAPTION ,{expiresIn : '24h'})
+    const token =  jwt.sign({_id : this._id},process.env.JWT_TOKEN_SECRET_CAPTION ,{expiresIn : '24h'})  
+    console.log(token,"from model");
+    
     return token;
 }
 
-// userSchema.methods.generateAuthToken = function() {
-//     const token = jwt.sign({_id : this._id}, process.env.JWT_TOKEN_SECRET, { expiresIn: '24h' });
-//     return token
-// }
 
-captainSchema.methods.caomparePassword = async function(password){
+captainSchema.methods.comparePassword = async function(password){
     return await bcrypt.compare(password , this.password)
 }
 

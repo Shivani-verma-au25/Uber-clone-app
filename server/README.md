@@ -509,3 +509,132 @@ The endpoint responds with appropriate HTTP status codes and messages.
 - A JWT token is generated and returned upon successful registration
 - The captain's initial status is set to "inactive"
 - The system prevents duplicate email registrations
+
+# Captain Authentication Endpoints
+
+## Login Captain
+Authenticate a captain and receive an authentication token.
+
+### Endpoint
+`POST /api/v1/captains/login`
+
+### Request Headers
+- `Content-Type: application/json`
+
+### Request Body
+```json
+{
+  "email": "string",
+  "password": "string"
+}
+```
+
+### Field Requirements
+| Field      | Type   | Required | Description                    |
+|------------|--------|----------|--------------------------------|
+| `email`    | String | Yes      | Valid email format            |
+| `password` | String | Yes      | Min length: 6 characters      |
+
+### Success Response
+**Status Code:** `201 Created`
+
+**Body:**
+```json
+{
+  "token": "<authToken>",
+  "captain": {
+    "_id": "<captainId>",
+    "fullname": {
+      "firstname": "string",
+      "lastname": "string"
+    },
+    "email": "string",
+    "status": "string",
+    "vehicle": {
+      "color": "string",
+      "plate": "string",
+      "capacity": "number",
+      "vehicleType": "string"
+    }
+  }
+}
+```
+
+### Error Responses
+**Status Code:** `400/401`
+```json
+{
+  "message": "Invalid email and password"
+}
+```
+
+## Get Captain Profile
+Retrieve the authenticated captain's profile information.
+
+### Endpoint
+`GET /api/v1/captains/profile`
+
+### Request Headers
+- `Authorization: Bearer <token>`
+
+### Success Response
+**Status Code:** `200 OK`
+
+**Body:**
+```json
+{
+  "captain": {
+    "_id": "<captainId>",
+    "fullname": {
+      "firstname": "string",
+      "lastname": "string"
+    },
+    "email": "string",
+    "status": "string",
+    "vehicle": {
+      "color": "string",
+      "plate": "string",
+      "capacity": "number",
+      "vehicleType": "string"
+    }
+  }
+}
+```
+
+### Error Response
+**Status Code:** `401 Unauthorized`
+```json
+{
+  "message": "Unauthorized"
+}
+```
+
+## Logout Captain
+End the captain's authenticated session.
+
+### Endpoint
+`GET /api/v1/captains/logout`
+
+### Request Headers
+- `Authorization: Bearer <token>`
+
+### Success Response
+**Status Code:** `200 OK`
+```json
+{
+  "message": "Captain logged out"
+}
+```
+
+### Error Response
+**Status Code:** `401 Unauthorized`
+```json
+{
+  "message": "Unauthorized"
+}
+```
+
+### Notes
+- All authenticated endpoints require a valid JWT token in the Authorization header
+- Tokens are automatically blacklisted upon logout
+- The system maintains session state through cookies and token validation
