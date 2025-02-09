@@ -5,6 +5,7 @@ import UserLogin from './pages/UserLogin'
 import UserRegister from './pages/UserRegister'
 import CaptainRegister from './pages/CaptainRegister'
 import Captainlogin from './pages/Captainlogin'
+import NotFoundPage from './pages/PageNotFound'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Route path='/user-register' element={<UserRegister />}/>
       <Route path='/captain-register' element={<CaptainRegister />}/>
       <Route path='/captain-login' element={<Captainlogin />}/>
+      <Route path='/*' element={<NotFoundPage />}/>
     </Routes>
   )
 }
