@@ -1,21 +1,48 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { userDataContext } from '@/context/UserContext'
 import { Label } from '@radix-ui/react-label'
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import axios from 'axios'
+import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
+
+
 
 function UserLogin() {
   const [email,setEmail] = useState('')
   const [password,setPassord] = useState('')
   const [userData ,setUserData] = useState([])
+  const navigate = useNavigate()
+  const {user,setUser} = useContext(userDataContext)
+
 
   // onsubmit fucntion
-  const onSubmitHandler = (e) =>{
+  const onSubmitHandler = async (e) =>{
     e.preventDefault()
-    setUserData([
-      ...userData,
-      {email:email,password:password}
-    ])
+    const userData = ({
+      email:email,
+      password:password
+      })
+
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/users/login`,userData ,{headers: {'Content-Type ':'application/json'}})
+      // console.log(response.data,"login");
+
+      if (response.status === 200) {
+        const data = response.data
+        setUser(data.user)
+        localStorage.setItem('token',JSON.stringify(data.token))
+        navigate('/home')
+        toast.success('Login Successfully')
+      }
+      
+    } catch (error) {
+      toast.error(error.response?.data?.message || error?.message)
+      console.log("Error",error.response?.data?.message || error?.message);
+      
+    }  
+
     setEmail('')
     setPassord('')
     
