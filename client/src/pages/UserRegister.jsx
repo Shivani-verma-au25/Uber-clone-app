@@ -37,7 +37,7 @@ function UserRegister() {
             const data = response.data;
             setUser(data.user);
             localStorage.setItem('token',JSON.stringify(data.token))
-            navigate('/home');
+            navigate('/user-login');
             toast.success("User Registered Successfully") 
           }
         } catch (error) {

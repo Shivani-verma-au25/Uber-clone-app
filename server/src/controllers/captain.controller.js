@@ -6,46 +6,51 @@ import { validationResult } from "express-validator"
 
 
 
-export const captainRegiter = async (req,res)=>{
-    const errors = validationResult(req)
-    if(!errors.isEmpty()){
-        return res.status(400).json({errors:errors.array()})
+export const captainRegiter = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
 
-    const {fullname,email,password,vehicle} = req.body;
+    const { fullname, email, password, vehicle } = req.body;
 
-    // existance check of captain
-    const captain = await Captain.findOne({email})
-    if(captain){
-        return res.status(400).json({message:'Captain already exist'})
+    // console.log(req.body, "from captain");
+
+    // Check if captain already exists
+    const existingCaptain = await Captain.findOne({ email });
+    if (existingCaptain) {
+      return res.status(400).json({ message: "Captain already exists" });
     }
-    
-    //hashing password 
 
-    const hashedPass = await Captain.hashedPassword(password)
+    if (!password) {
+      return res.status(400).json({ message: "Password is required" });
+    }
 
-    //creating captain
+    // Hash the password
+    const hashedPass = await Captain.hashedPassword(password);
 
+    // Create new captain
     const newCaptain = await createCaptain({
-        firstname : fullname.firstname,
-        lastname :fullname.lastname,
-        email,
-        password : hashedPass ,
-        color : vehicle.color,
-        plate : vehicle.plate,
-        capacity:vehicle.capacity,
-        vehicleType : vehicle.vehicleType
-    })
+      firstname: fullname.firstname,
+      lastname: fullname.lastname || null, // Handle optional lastname
+      email,
+      password: hashedPass,
+      color: vehicle.color,
+      plate: vehicle.plate,
+      capacity: vehicle.capacity,
+      vehicleType: vehicle.vehicleType,
+    });
 
-    // generating token
-    const token = newCaptain.generateAuthCaptionToken()
-    console.log(token ,"captain register");
-    
+    // Generate token
+    const token = newCaptain.generateAuthCaptionToken();
 
-    res.status(200).json({token,newCaptain})
-
-    
-}
+    res.status(200).json({ token, newCaptain });
+  } catch (error) {
+    console.error("Error in captainRegister:", error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
 
  
 
@@ -58,7 +63,7 @@ export const loginCaptain = async (req, res) =>{
     }
 
     const {email,password} = req.body;
-    // console.log(email ,password);
+    console.log(email ,password);
 
     if(!password){
         return res.status(400).json({message : "Password is required"})

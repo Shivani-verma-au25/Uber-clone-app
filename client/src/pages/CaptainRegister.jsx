@@ -28,7 +28,7 @@ function CaptainRegister() {
         const captainData = ({ 
             fullname:{
               firstname:firstname,
-              lastname:lastname
+              lastname:lastname 
             }, 
             email:email,
             password:password,
@@ -36,13 +36,13 @@ function CaptainRegister() {
               color : vehicleColor,
               plate : vehiclePlate,
               capacity : vehicleCapacity,
-              type : vehicleType
+              vehicleType : vehicleType
             }
           }
         )
 
           try {
-            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/captains/register`,captainData ,{headers:{'Content-Type ':"applicatipon/json"}})
+            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/captains/register`,captainData ,{headers:{'Content-Type ':"application/json"}})
             console.log(response.data)
 
             if (response.status === 200) {
@@ -50,7 +50,7 @@ function CaptainRegister() {
                 setCaptain(data)
                 localStorage.setItem('captainToken',JSON.stringify(data.token))
                 toast.success("captain regisred successfully")
-                navigate('/cap-dashboard')
+                navigate('/captain-login')
 
             }
           } catch (error) {
@@ -62,6 +62,10 @@ function CaptainRegister() {
         setPassord('')
         setFirstName('')
         setLastName('')
+        setVehicleCapacity('')
+        setVehicleColor('')
+        setVehiclePlate('')
+        setVehicleType('')
         
       }
   return (
@@ -81,7 +85,6 @@ function CaptainRegister() {
               onChange={(e) => setFirstName(e.target.value)}
             />
             <Input className="bg-[#eeeeee] text-base placeholder:text-sm" 
-              required
               type="text"
               id="lastname"
               placeholder="Last Name"

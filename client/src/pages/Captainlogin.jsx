@@ -1,24 +1,54 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { captainDataContext } from '@/context/CaptainContext'
 import { Label } from '@radix-ui/react-label'
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import axios from 'axios'
+import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
+
 
 function Captainlogin() {
   const [email,setEmail] = useState('')
-  const [password,setPassord] = useState('')
+  const [password,setPassword] = useState('')
   const [captainData ,setCaptainData] = useState([])
+  const navigate = useNavigate()
+  const {captain,setCaptain} = useContext(captainDataContext)
+
 
   // onsubmit fucntion
-  const onSubmitHandler = (e) =>{
+  const onSubmitHandler = async(e) =>{
     e.preventDefault()
-    setCaptainData([
-      ...captainData,
-      {email:email,password:password}
-    ])
+    const captainData = {
+      email:email,
+      password:password
+    }
+
+    // if (!email || !password) {
+    //     toast.error("Email and password are required")
+    // }
+
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/v1/captains/login`,captainData ,{
+         headers : {
+          'Content-Type' :'application/json'
+         }})
+
+      if (response.status === 201) {
+        const data = response.data
+        setCaptain(data.captain)
+        localStorage.setItem('captainToken',JSON.stringify(data.token))
+        navigate('/captain-home')
+        toast.success('Captain logged-in successfully ')
+      }
+      
+    } catch (error) {
+      toast.error(error.response?.data?.message ||  error?.message)
+      console.log("Error :-", error.response?.data?.message || error?.message);
+      
+    }
     setEmail('')
-    setPassord('')
-    
+    setPassword('')
   }
   
 
@@ -42,7 +72,7 @@ function Captainlogin() {
            id="password"
             placeholder="password"
             value={password}
-            onChange= {(e) =>setPassord(e.target.value)}
+            onChange= {(e) =>setPassword(e.target.value)}
             />
           <Button className="font-semibold w-full">Login</Button>
           <p className='text-center my-4 text-xs font-semibold'>Want to Join a fleet? <Link to={'/captain-register'} className='mb-3 font-bold text-xs text-blue-600'>Register as a Captain! </Link> </p>

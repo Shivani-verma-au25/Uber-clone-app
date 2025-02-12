@@ -52,7 +52,7 @@ const captainSchema = new Schema({
         },
         vehicleType : {
             type : String,
-            enum : ['car','motorcycle','auto'],
+            enum : ['car','moto','auto'],
             required : true
         }
     },
@@ -84,7 +84,11 @@ captainSchema.methods.comparePassword = async function(password){
 }
 
 captainSchema.statics.hashedPassword = async function(password){
-    return bcrypt.hash(password,10)
+    // if (!password) {
+    //     throw new Error("Password is required")
+    // }
+
+    return await bcrypt.hash(password,10)
 }
 
 

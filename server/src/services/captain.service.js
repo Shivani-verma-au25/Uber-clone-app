@@ -1,5 +1,6 @@
 import { Captain } from "../models/captain.models.js";
 
+
 export const createCaptain = async ({
   firstname,
   lastname,
@@ -8,18 +9,17 @@ export const createCaptain = async ({
   color,
   plate,
   capacity,
-  vehicleType
+  vehicleType,
 }) => {
-  // Check that all required fields are provided
   if (!firstname || !email || !password || !color || !plate || !capacity || !vehicleType) {
-    throw new Error("All fields are required!");
-  } 
+    throw new Error("All required fields must be provided (lastname is optional).");
+  }
 
-  // Create captain with nested vehicle object
+  // Create captain with optional lastname
   const captain = await Captain.create({
     fullname: {
       firstname,
-      lastname
+      ...(lastname && { lastname }), // Only include lastname if provided
     },
     email,
     password,
@@ -27,8 +27,8 @@ export const createCaptain = async ({
       color,
       plate,
       capacity,
-      vehicleType
-    }
+      vehicleType,
+    },
   });
 
   return captain;

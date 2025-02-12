@@ -7,9 +7,11 @@ import CaptainRegister from './pages/CaptainRegister'
 import Captainlogin from './pages/Captainlogin'
 import NotFoundPage from './pages/PageNotFound'
 import UserProtectedWrapper from './pages/UserProtectedWrapper'
-import CaptainDashBoard from './pages/CapainDashBoard'
 import Home from './pages/Home'
 import UserLogOut from './pages/UserLogOut'
+import CaptainHome from './pages/CaptainHome'
+import CaptainProtectedWrapper from './pages/CaptainProtectedWrapper'
+import CaptainLogout from './pages/CaptainLogout'
 
 function App() {
   return (
@@ -29,7 +31,17 @@ function App() {
         <UserProtectedWrapper>
           <UserLogOut/>
       </UserProtectedWrapper>}/>
-      <Route path='/cap-dashboard'  element={<CaptainDashBoard />}/>
+
+      <Route path='/captain-home'  element={
+        <CaptainProtectedWrapper>
+          <CaptainHome/>
+        </CaptainProtectedWrapper>
+      }/>
+      <Route path='/captain/logout' element={
+        <CaptainProtectedWrapper>
+          <CaptainLogout/>
+        </CaptainProtectedWrapper>
+      } />
     </Routes>
   )
 }

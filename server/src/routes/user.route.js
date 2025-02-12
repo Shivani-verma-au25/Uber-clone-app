@@ -10,6 +10,7 @@ const router = Router()
 router.route('/register' , [
     body('email').isEmail().withMessage('Invalid Email'),
     body('fullname.firstname').isLength({min : 3}).withMessage("First name must be atleast 3 character long"),
+    body('fullname.lastname').isLength({min : 3}).withMessage("Last name must be atleast 3 character long"),
     body('passowrd').isLength({min:6}).withMessage('Password must be atleast 6 character long')
 ] ).post(registerUser)
 
