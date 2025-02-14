@@ -12,11 +12,13 @@ import UserLogOut from './pages/UserLogOut'
 import CaptainHome from './pages/CaptainHome'
 import CaptainProtectedWrapper from './pages/CaptainProtectedWrapper'
 import CaptainLogout from './pages/CaptainLogout'
+import Riding from './pages/Riding'
 
 function App() {
   return (
     <Routes>
       <Route path='/' element={<Start />}/>
+      <Route path='/riding' element={<Riding />}/>
       <Route path='/home' element={
         <UserProtectedWrapper>
           <Home />
