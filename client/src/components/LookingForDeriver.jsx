@@ -3,10 +3,13 @@ import { FaLocationArrow, FaLocationDot } from 'react-icons/fa6'
 import { FcMoneyTransfer } from 'react-icons/fc'
 import { MdKeyboardArrowDown } from 'react-icons/md'
 
-function LookingForDeriver({lookingForDriver}) {
+function LookingForDeriver({setConformedRidePanel,setLookingForDriver}) {
   return (
     <div>
-            <h2 onClick={() => setConformedRidePanel(false)} className='font-semibold text-3xl absolute translate-x-[45%]  top-2 text-gray-200 w-full  cursor-pointer'>< MdKeyboardArrowDown /></h2>
+            <h2 onClick={() => {
+                setConformedRidePanel(false) 
+                setLookingForDriver(false)
+            }} className='font-semibold text-3xl absolute translate-x-[45%]  top-2 text-gray-200 w-full  cursor-pointer'>< MdKeyboardArrowDown /></h2>
             <h3 className='font-semibold text-2xl py-5'>Looking for a driver</h3>
             <div className='flex flex-col gap-2 items-center justify-center'>
                 <img className='h-28' src="https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,h_368,w_552/v1548646935/assets/64/93c255-87c8-4e2e-9429-cf709bf1b838/original/3.png" alt="" />

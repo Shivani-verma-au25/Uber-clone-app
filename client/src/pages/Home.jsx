@@ -19,12 +19,14 @@ function Home() {
   const [vehiclePanel ,setVehiclePanel] = useState(false)
   const [conformedRidePanel,setConformedRidePanel] = useState(false)
   const [lookingForDriverPanel ,setLookingForDriver] = useState(false)
+  const [waitingForDriverPanel ,setwaitingForDriverPanel] = useState(false)
 
   const openPanelRef = useRef(null);
   const closePanelRef = useRef(null);
   const vehiclePanleRef = useRef(null)
   const conformedVehilcePanelRef = useRef(null)
   const lookingForDriver = useRef(null)
+  const waitingForDriverRef = useRef(null)
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -98,6 +100,19 @@ function Home() {
       }
    },[lookingForDriverPanel])  
 
+  // gsap for waiting for driver panel
+   useGSAP(() =>{
+      if (waitingForDriverPanel) {
+        gsap.to(waitingForDriverRef.current ,{
+        transform: 'translateY(0)'
+      })
+      }else{
+        gsap.to(waitingForDriverRef.current ,{
+          transform : 'translateY(100%)'
+        })
+      }
+   },[waitingForDriverPanel])  
+
   return (
     <div className="h-screen relative overflow-hidden">
       <img
@@ -169,8 +184,8 @@ function Home() {
       </div>
 
       {/* waiting for a driver */}
-      <div  className=' fixed z-10 bottom-0 -translate-y-10 bg-white w-full px-3 py-8'>
-        <WaitingForDriver  />
+      <div ref={waitingForDriverRef}  className=' fixed z-10 bottom-0 translate-y-full bg-white w-full px-3 py-8'>
+        <WaitingForDriver  setwaitingForDriverPanel={setwaitingForDriverPanel} />
       </div>
     </div>
   );
